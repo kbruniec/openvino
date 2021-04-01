@@ -155,15 +155,17 @@ bool ngraph::pass::CommonOptimizations::run_on_function(std::shared_ptr<ngraph::
 
     manager.register_pass<ngraph::pass::ConstantFolding>();
 
+    manager.register_pass<ngraph::pass::VisualizeTree>("before-fq_fusions-AddFakeQuantizeFusion.svg");
     auto fq_fusions = manager.register_pass<ngraph::pass::GraphRewrite>();
     fq_fusions->add_matcher<ngraph::pass::FakeQuantizeMulFusion>();
     fq_fusions->add_matcher<ngraph::pass::FakeQuantizeReshapeFusion>();
     fq_fusions->add_matcher<ngraph::pass::PullTransposeThroughFQUp>();
     fq_fusions->add_matcher<ngraph::pass::ReluFakeQuantizeFusion>();
+    
     fq_fusions->add_matcher<ngraph::pass::AddFakeQuantizeFusion>();
     fq_fusions->add_matcher<ngraph::pass::MulFakeQuantizeFusion>();
     fq_fusions->set_name("ngraph::pass::FakeQuantizeFusions");
-
+    manager.register_pass<ngraph::pass::VisualizeTree>("after-fq_fusions-AddFakeQuantizeFusion.svg");
     manager.run_passes(f);
 
     // Returning value is false because pass::Manager always apply Validation pass

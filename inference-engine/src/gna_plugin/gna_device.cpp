@@ -126,7 +126,7 @@ void GNADeviceHelper::enforceLegacyCnns(Gna2Model& gnaModel) {
         }
     }
 }
-
+#define MODEL_DUMP
 uint32_t GNADeviceHelper::createModel(Gna2Model& gnaModel) const {
     std::unique_lock<std::mutex> lockGnaCalls{ acrossPluginsSync };
     uint32_t modelId;

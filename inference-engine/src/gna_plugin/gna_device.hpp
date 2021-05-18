@@ -130,9 +130,10 @@ public:
     void setUpActiveList(unsigned req_config_id, uint32_t layerIndex, uint32_t* ptr_active_indices, uint32_t num_active_indices);
     void propagateSync(const uint32_t requestConfigId, Gna2AccelerationMode gna2AccelerationMode);
     uint32_t propagate(const uint32_t requestConfigId, Gna2AccelerationMode gna2AccelerationMode);
-    uint32_t createModel(Gna2Model& gnaModel) const;
+    std::vector<uint32_t> createModels(Gna2Model& gnaModel) const;
+    uint32_t createModel(Gna2Model& gnaModel);
     void releaseModel(const uint32_t model_id);
-    uint32_t createRequestConfig(const uint32_t model_id);
+    std::vector<uint32_t> createRequestConfig(const std::vector<uint32_t> modelsId);
     static uint32_t getNumberOfGnaDevices();
     static uint32_t selectGnaDevice();
     static bool isGnaHw(const Gna2DeviceVersion dev) {
@@ -147,7 +148,11 @@ public:
     bool enforceLegacyCnnNeeded() const;
     Gna2DeviceVersion getExecutionTargetDevice() const;
     static void checkGna2Status(Gna2Status status, const std::string& from);
-    static void checkGna2Status(Gna2Status status, const Gna2Model& gnaModel);
+    static void checkGna2Status(Gna2Status status, const Gna2Model& gnaModel, uint32_t operationOffset = 0);
+    bool layerSplitMode = true;
+    std::vector<std::pair<std::string, uint64_t> > perLayerPerfCounters;
+    std::map< uint32_t, std::vector< uint32_t> > allGnaReqIdsMap;
+    std::map< uint32_t, std::vector< uint32_t> > allGnaModelsIdsMap;
 #endif
     GnaWaitStatus wait(uint32_t id, int64_t millisTimeout = MAX_TIMEOUT);
 
